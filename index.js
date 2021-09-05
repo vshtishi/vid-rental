@@ -1,6 +1,10 @@
-const Joi = require('joi');
+const mongoose = require('mongoose');
 const express = require('express');
 const genres = require('./routes/genres');
+
+mongoose.connect('mongodb://localhost/video-rental')
+    .then(() => console.log('connected to MongoDB...'))
+    .catch((err) => console.log(err.message));
 
 const app = express();
 
