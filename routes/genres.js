@@ -1,19 +1,7 @@
 const express = require('express');
-const Joi = require('joi');
-
+const { Genre, validateGenre } = require('../models/genre');
 const router = express.Router();
 const mongoose = require('mongoose');
-
-
-const Genre = mongoose.model('Genre', new mongoose.Schema({
-    name:
-    {
-        type: String,
-        required: true,
-        minlength: 5,
-        maxlength: 50
-    }
-}));
 
 router.get('/', async (req, res) => {
     const genres = await Genre.find().sort('name');
@@ -58,7 +46,7 @@ router.put('/:id', async (req, res) => {
         { name: req.body.name },
         { new: true }
     );
-    
+
     //404 - Not Found
     if (!genre) {
         return res.status(404).send('The genre with the given ID was not found');
@@ -89,12 +77,5 @@ router.delete('/:id', async (req, res) => {
 
 });
 
-function validateGenre(genre) {
-    const schema = Joi.object({
-        name: Joi.string().min(3).max(50).required()
-    });
-
-    return schema.validate(genre);
-}
 
 module.exports = router
