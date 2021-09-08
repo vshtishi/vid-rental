@@ -2,6 +2,7 @@ const express = require('express');
 const { User, validateUser } = require('../models/user');
 const router = express.Router();
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 
 router.post('/', async (req, res) => {
@@ -17,15 +18,11 @@ router.post('/', async (req, res) => {
         return res.status(400).send('User already exists');
     }
 
-    user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
-    });
+    user = new User(_.pick(req.body, ['name', 'email', 'password']));
 
     await user.save();
 
-    res.send(user);
+    res.send(_.pick(user, ['name', 'email']));
 
 });
 
