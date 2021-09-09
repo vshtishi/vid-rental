@@ -12,7 +12,7 @@ const Customer = mongoose.model('Customer', new mongoose.Schema({
         type: String,
         required: true,
         minlength: 10,
-        maxLenght: 10
+        maxlength: 11
     },
     isGold: {
         default: false,

@@ -4,8 +4,10 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Fawn = require('fawn');
 const { Customer } = require('../models/customer');
+const { Movie } = require('../models/movie');
 
-Fawn.init(mongoose);
+
+Fawn.init("mongodb://localhost/video-rental");
 
 router.get('/', async (req, res) => {
     const rentals = await Rental.find().sort('-orderDate');
@@ -59,7 +61,7 @@ router.post('/', async (req, res) => {
 
     }
     catch (ex) {
-         res.status(500).send('Something went wrong.');
+        res.status(500).send('Something went wrong.');
     }
     res.send(rental);
 
