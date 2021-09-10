@@ -1,5 +1,4 @@
 const express = require('express');
-const asyncMiddleware = require('../middleware/async');
 const Joi = require('joi');
 const { User } = require('../models/user');
 const router = express.Router();
@@ -7,7 +6,7 @@ const mongoose = require('mongoose');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 
-router.post('/', asyncMiddleware(async (req, res) => {
+router.post('/', async (req, res) => {
     const { error } = validate(req.body);
 
     //400 - Bad Request
@@ -28,7 +27,7 @@ router.post('/', asyncMiddleware(async (req, res) => {
     const token = user.generateAuthToken();
 
     res.send(token);
-}));
+});
 
 function validate(req) {
     const schema = Joi.object({
@@ -40,4 +39,4 @@ function validate(req) {
 }
 
 
-module.exports = router;
+module.exports = router

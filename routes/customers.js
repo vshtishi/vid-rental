@@ -1,6 +1,5 @@
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
-const asyncMiddleware = require('../middleware/async');
 const express = require('express');
 const { Customer, validateCustomer } = require('../models/customer');
 const _ = require('lodash');
@@ -8,12 +7,12 @@ const _ = require('lodash');
 const router = express.Router();
 const mongoose = require('mongoose');
 
-router.get('/', asyncMiddleware(async (req, res) => {
+router.get('/', async (req, res) => {
     const customers = await Customer.find().sort('name');
     res.send(customers);
-}));
+});
 
-router.post('/', auth, asyncMiddleware(async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const { error } = validateCustomer(req.body);
 
     if (error) {
@@ -29,9 +28,9 @@ router.post('/', auth, asyncMiddleware(async (req, res) => {
     await customer.save();
 
     res.send(customer);
-}));
+});
 
-router.get('/:id', asyncMiddleware(async (req, res) => {
+router.get('/:id', async (req, res) => {
     const customer = await Customer.findById(req.params.id);
 
     if (!customer) {
@@ -39,9 +38,9 @@ router.get('/:id', asyncMiddleware(async (req, res) => {
     }
 
     res.send(customer);
-}));
+})
 
-router.put('/:id', auth, asyncMiddleware(async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     const { error } = validateCustomer(req.body);
 
     if (error) {
@@ -60,9 +59,9 @@ router.put('/:id', auth, asyncMiddleware(async (req, res) => {
     }
 
     res.send(customer);
-}));
+})
 
-router.delete('/:id', [auth, admin], asyncMiddleware(async (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
     const customer = await Customer.findByIdAndRemove(req.params.id);
 
     if (!customer) {
@@ -71,8 +70,8 @@ router.delete('/:id', [auth, admin], asyncMiddleware(async (req, res) => {
 
     res.send(customer);
 
-}));
+})
 
 
 
-module.exports = router;
+module.exports = router
