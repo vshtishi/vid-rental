@@ -14,8 +14,16 @@ const users = require('./routes/users');
 const auth = require('./routes/auth')
 const config = require('config');
 
+
+process.on('unhandledRejection', (ex) => {
+    throw ex;
+});
+
+winston.exceptions.handle(new winston.transports.File({ filename: 'uncaughtExceptions.log' }))
 winston.add(new winston.transports.File({ filename: 'logfile.log' }));
-winston.add(new winston.transports.MongoDB({ db: 'mongodb://localhost/logs', options: { useUnifiedTopology: true }, level: 'error'}));
+winston.add(new winston.transports.MongoDB({ db: 'mongodb://localhost/logs', options: { useUnifiedTopology: true }, level: 'error' }));
+
+
 
 if (!config.get('jwtPrivateKey')) {
     console.error('Fatal Error: jwtPrivateKey is not defined');
