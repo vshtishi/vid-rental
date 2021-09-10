@@ -1,16 +1,18 @@
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
+const asyncMiddleware = require('../middleware/async');
 const express = require('express');
 const { Movie, validateMovie } = require('../models/movie');
 const router = express.Router();
 const mongoose = require('mongoose');
 const { Genre } = require('../models/genre');
 
-router.get('/', async (req, res) => {
+router.get('/', asyncMiddleware(async (req, res) => {
     const movies = await Movie.find().sort('name');
     res.send(movies);
-});
+}));
 
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, asyncMiddleware(async (req, res) => {
     const { error } = validateMovie(req.body);
 
     //400 - Bad Request
@@ -37,9 +39,9 @@ router.post('/', auth, async (req, res) => {
 
     res.send(movie);
 
-});
+}));
 
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth, asyncMiddleware(async (req, res) => {
     const { error } = validateMovie(req.body);
 
     if (error) {
@@ -71,9 +73,9 @@ router.put('/:id', auth, async (req, res) => {
     }
 
     res.send(movie);
-});
+}));
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', asyncMiddleware(async (req, res) => {
     const movie = await Movie.findById(req.params.id);
 
     if (!movie) {
@@ -81,9 +83,9 @@ router.get('/:id', async (req, res) => {
     }
 
     res.send(movie);
-});
+}));
 
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', [auth, admin], asyncMiddleware(async (req, res) => {
     const movie = await Movie.findByIdAndRemove(req.params.id);
 
     if (!movie) {
@@ -93,6 +95,6 @@ router.delete('/:id', auth, async (req, res) => {
 
     res.send(movie);
 
-});
+}));
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const express = require('express');
+const asyncMiddleware = require('../middleware/async');
 const { Rental, validateRental } = require('../models/rental');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -9,12 +10,12 @@ const { Movie } = require('../models/movie');
 
 Fawn.init("mongodb://localhost/video-rental");
 
-router.get('/', async (req, res) => {
+router.get('/', asyncMiddleware(async (req, res) => {
     const rentals = await Rental.find().sort('-orderDate');
     res.send(rentals);
-});
+}));
 
-router.post('/', async (req, res) => {
+router.post('/', asyncMiddleware(async (req, res) => {
     const { error } = validateRental(req.body);
 
     //400 - Bad Request
@@ -65,6 +66,6 @@ router.post('/', async (req, res) => {
     }
     res.send(rental);
 
-});
+}));
 
-module.exports = router
+module.exports = router;
