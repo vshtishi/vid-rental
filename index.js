@@ -9,7 +9,8 @@ require('./startup/validation')();
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-throw new Error('just a test')
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on Port ${port}...`));
+const server = app.listen(port, () => console.log(`Listening on Port ${port}...`));
+
+module.exports = server;
