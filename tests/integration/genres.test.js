@@ -10,7 +10,7 @@ let server;
 describe('/api/genres', () => {
     beforeEach(() => { server = require('../../index') });
     afterEach(async () => {
-        server.close();
+        await server.close();
         await Genre.deleteMany({});
     });
 
@@ -61,8 +61,8 @@ describe('/api/genres', () => {
         let token;
         let name;
 
-        const exec = async () => {
-            return await request(server).post('/api/genres').set('x-auth-token', token).send({ name });
+        const exec = () => {
+            return request(server).post('/api/genres').set('x-auth-token', token).send({ name });
         }
 
         beforeEach(() => {
@@ -119,8 +119,8 @@ describe('/api/genres', () => {
         let genre;
         let id;
 
-        const exec = async () => {
-            return await request(server).put('/api/genres/' + id).set('x-auth-token', token).send({ name: updatedName });
+        const exec = () => {
+            return request(server).put('/api/genres/' + id).set('x-auth-token', token).send({ name: updatedName });
         }
 
         beforeEach(async () => {
@@ -201,9 +201,8 @@ describe('/api/genres', () => {
             token = new User({ name: 'user1', isAdmin: true }).generateAuthToken();
         });
 
-        const exec = async () => {
-            return await request(server).delete('/api/genres/' + id).set('x-auth-token', token).send();
-
+        const exec = () => {
+            return request(server).delete('/api/genres/' + id).set('x-auth-token', token).send();
         }
 
         it('should return 401 if the user is not logged in', async () => {
